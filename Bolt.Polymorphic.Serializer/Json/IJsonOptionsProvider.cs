@@ -11,11 +11,13 @@ public interface IJsonOptionsProvider
 internal sealed class JsonOptionsProvider : IJsonOptionsProvider
 {
     private readonly ITypeRegistry _registry;
+    private readonly JsonSerializationSettings _settings;
     private readonly Lazy<JsonSerializerOptions> _lazyOptions;
 
-    public JsonOptionsProvider(ITypeRegistry registry)
+    public JsonOptionsProvider(ITypeRegistry registry, JsonSerializationSettings settings)
     {
-        this._registry = registry;
+        _registry = registry;
+        _settings = settings;
         _lazyOptions = new Lazy<JsonSerializerOptions>(Build);
     }
 
@@ -24,8 +26,8 @@ internal sealed class JsonOptionsProvider : IJsonOptionsProvider
         var opt = new JsonSerializerOptions
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            PropertyNameCaseInsensitive = true,
-            WriteIndented = false,
+            PropertyNameCaseInsensitive  = true,
+            WriteIndented = _settings.WriteIndented,
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 

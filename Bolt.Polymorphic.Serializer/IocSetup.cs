@@ -19,9 +19,10 @@ public static class IocSetup
         {
             typeRegistry.Register(type.Assembly, type.Types);
         }
-        
+
+        services.AddSingleton(options.JsonSettings ?? new JsonSerializationSettings());
         services.AddSingleton<ITypeRegistry>(_ => typeRegistry);
-        services.AddSingleton<IJsonOptionsProvider, JsonOptionsProvider>();
+        services.AddSingleton<IJsonOptionsProvider,JsonOptionsProvider>();
         services.AddSingleton<IJsonSerializer, JsonSerializer>();
 
         services.AddSingleton<IXmlSerializer, XmlSerializer>();
@@ -42,4 +43,11 @@ public record PolymorphicSerializerOptions
     }
 
     internal IEnumerable<(Assembly Assembly, Type[] Types)> SupportedTypes => _supportedTypes;
+    
+    public JsonSerializationSettings? JsonSettings { get; set; }
+}
+
+public record JsonSerializationSettings
+{
+    public bool WriteIndented { get; set; } = false;
 }

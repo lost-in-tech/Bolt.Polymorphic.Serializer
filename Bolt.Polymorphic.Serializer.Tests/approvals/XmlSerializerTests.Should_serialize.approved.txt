@@ -1,0 +1,8 @@
+﻿<Root StrValue="this is string">
+	<Sub StrValue="this is sub string" />
+	<Elements>
+		<Button Name="btnSave" Text="This is button" />
+		<Label For="btnSave" Text="This is label" />
+	</Elements>
+	<Btn _type="Button" Name="btnSearch" Text="this is button property" />
+</Root>

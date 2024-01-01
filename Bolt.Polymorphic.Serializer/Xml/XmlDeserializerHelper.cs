@@ -30,8 +30,8 @@ internal sealed class XmlDeserializerHelper
 
     private T? BuildElement<T>(XmlReader reader)
     {
-        var typeName = reader.Name;
-        var typeData = _typeRegistry.TryGet(typeName);
+        var typeName = reader.GetAttribute("_type") ?? reader.Name;
+        var typeData = _typeRegistry.TryGet(typeName) ?? TypeHelper.GetTypeData(typeof(T));
         
         return (T?)BuildObject(typeData, reader);
     }
@@ -56,7 +56,9 @@ internal sealed class XmlDeserializerHelper
             if (reader.NodeType == XmlNodeType.Whitespace) continue;
             if (reader.NodeType == XmlNodeType.Element)
             {
-                var obj = BuildObject(typeData.CollectionType, reader);
+                var typeName = reader.GetAttribute("_type") ?? reader.Name;
+                var arrayElementTypeData = _typeRegistry.TryGet(typeName);
+                var obj = BuildObject(arrayElementTypeData, reader);
                 result.Add(obj);
             }
         }
@@ -74,10 +76,10 @@ internal sealed class XmlDeserializerHelper
     {
         if (typeData == null) return null;
 
-
-        if (typeData.Type.IsInterface)
+        var typeName = reader.GetAttribute("_type");
+        if(!string.IsNullOrWhiteSpace(typeName))
         {
-            typeData = _typeRegistry.TryGet(reader.Name);
+            typeData = _typeRegistry.TryGet(typeName);
 
             if (typeData == null) return null;
         }

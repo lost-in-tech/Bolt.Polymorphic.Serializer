@@ -1,0 +1,23 @@
+﻿{
+  "strValue": "this is string",
+  "sub": {
+    "strValue": "this is sub string"
+  },
+  "elements": [
+    {
+      "_type": "Button",
+      "name": "btnSave",
+      "text": "This is button"
+    },
+    {
+      "_type": "Label",
+      "for": "btnSave",
+      "text": "This is label"
+    }
+  ],
+  "btn": {
+    "_type": "Button",
+    "name": "btnSearch",
+    "text": "this is button property"
+  }
+}

@@ -32,7 +32,7 @@ internal static class XmlSerializerHelper
     }
 
 
-    private static void Serialize(Type type, string elementName, object? value, XmlWriter writer)
+    private static void Serialize(Type type, string elementName, object? value, XmlWriter writer, bool needTypeName = false)
     {
         if (value == null) return;
 
@@ -40,7 +40,7 @@ internal static class XmlSerializerHelper
 
         writer.WriteStartElement(elementName);
 
-        if(typeName != elementName)
+        if(needTypeName)
         {
             writer.WriteAttributeString("_type", typeName);
         }
@@ -80,7 +80,8 @@ internal static class XmlSerializerHelper
             }
             else
             {
-                Serialize(prop.PropertyType.IsInterface ? propValue.GetType() : prop.PropertyType, prop.Name, propValue, writer);
+                var needTypeNameInner = prop.PropertyType != propValue.GetType();
+                Serialize(prop.PropertyType.IsInterface ? propValue.GetType() : prop.PropertyType, prop.Name, propValue, writer, needTypeNameInner);
             }
         }
 

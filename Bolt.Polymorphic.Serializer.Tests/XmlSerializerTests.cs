@@ -1,50 +1,77 @@
-﻿using Bolt.Common.Extensions;
-using Bolt.Polymorphic.Serializer.Tests.Fixtures;
+﻿using Bolt.Polymorphic.Serializer.Tests.Fixtures;
+using Bolt.Polymorphic.Serializer.Tests.Helpers;
 using Bolt.Polymorphic.Serializer.Xml;
-
 namespace Bolt.Polymorphic.Serializer.Tests;
 
 public class XmlSerializerTests(SerializerFixture fixture) : IClassFixture<SerializerFixture>
 {
-    private readonly SerializerFixture _fixture = fixture;
-
     [Fact]
     public async Task Should_serialize()
     {
-        var root = new Root();
-        var d = new List<IElement>();
-        d.Add(new Button{ Name = "btnSave", Text = "Save" });
-        d.Add(new Label{ For = "txtFirstName", Text = "First Name"});
-        d.Add(new Stack
+        var givenInput = BuildInput();
+
+        var got = await fixture.GetXmlSerializer().Serialize(givenInput, CancellationToken.None);
+        
+        got!.ShouldMatchApprovedDefault();
+    }
+
+    [Fact]
+    public async Task Should_deserialize()
+    {
+        var givenInput = BuildInput();
+
+        var givenSerialized = await fixture.GetXmlSerializer().Serialize(givenInput, CancellationToken.None);
+
+        var sut = fixture.GetXmlSerializer();
+        
+        var got = fixture.GetXmlSerializer().Deserialize<Root>(givenSerialized);
+        
+        fixture.GetJsonSerializer().Serialize(got).ShouldMatchApprovedDefault();
+    }
+
+    private Root BuildInput()
+    {
+        return new Root
         {
-            Elements = new []
+            StrValue = "this is string",
+            Sub = new SubObject
             {
-                new Paragraph
+                StrValue = "this is sub string"
+            },
+            Btn = new Button
+            {
+                Text = "this is button property",
+                Name = "btnSearch"
+            },
+            Elements = new IElement[]
+            {
+                new Button
                 {
-                    Text = "This is paragraph"
+                    Text = "This is button",
+                    Name = "btnSave"
+                },
+                
+                new Label
+                {
+                    Text = "This is label",
+                    For = "btnSave"
                 }
             }
-        });
-        root.Elements = d.ToArray();
-
-        var xmlSerializer = fixture.GetXmlSerializer();
-        
-        var gotStr = await xmlSerializer.Serialize(root, CancellationToken.None);
-        
-        using var data = ToMemoryStream(gotStr);
-        var got = xmlSerializer.Deserialize<Root>(data);
-
-        var a = got;
+        };
     }
     
-    
-    public static MemoryStream ToMemoryStream(string source)
+    public class Root
     {
-        var stream = new MemoryStream();
-        var writer = new StreamWriter(stream);
-        writer.Write(source);
-        writer.Flush();
-        stream.Position = 0;
-        return stream;
+        public string StrValue { get; set; }
+        
+        public SubObject Sub { get; set; }
+        
+        public IElement[] Elements { get; set; }
+        public IElement Btn { get; set; }
+    }
+    
+    public class SubObject
+    {
+        public string StrValue { get; set; }
     }
 }

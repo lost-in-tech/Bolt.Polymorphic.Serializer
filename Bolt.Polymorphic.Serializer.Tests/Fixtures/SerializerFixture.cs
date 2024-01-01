@@ -13,6 +13,10 @@ public class SerializerFixture
         var sc = new ServiceCollection();
         sc.AddPolymorphicSerializer(opt =>
         {
+            opt.JsonSettings = new JsonSerializationSettings
+            {
+                WriteIndented = true
+            };
             opt.AddSupportedType(typeof(IElement).Assembly, typeof(IElement));
         });
         
