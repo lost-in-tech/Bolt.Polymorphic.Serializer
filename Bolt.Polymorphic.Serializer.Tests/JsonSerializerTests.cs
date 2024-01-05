@@ -1,4 +1,5 @@
 ﻿using Bolt.Polymorphic.Serializer.Tests.Fixtures;
+using Bolt.Polymorphic.Serializer.Tests.Helpers;
 
 namespace Bolt.Polymorphic.Serializer.Tests;
 
@@ -9,22 +10,65 @@ public class JsonSerializerTests(SerializerFixture fixture) : IClassFixture<Seri
     [Fact]
     public void Should_serialize()
     {
-        var d = new List<IElement>();
-        d.Add(new Button{ Name = "btnSave", Text = "Save" });
-        d.Add(new Label{ For = "txtFirstName", Text = "First Name"});
-        d.Add(new Stack
+        var givenInput = BuildInput();
+        var sut = fixture.GetJsonSerializer();
+        var got = sut.Serialize(givenInput);
+        got.ShouldMatchApprovedDefault();
+    }
+
+    [Fact]
+    public void Should_deserialize()
+    {
+        var givenInput = BuildInput();
+        var sut = fixture.GetJsonSerializer();
+        var gotSerialized = sut.Serialize(givenInput);
+        var gotDeserialized = sut.Deserialize<TestObject>(gotSerialized);
+        _fixture.GetJsonSerializer().Serialize(gotDeserialized).ShouldMatchApprovedDefault();
+    }
+    
+    private TestObject BuildInput()
+    {
+        return new TestObject
         {
-            Elements = new []
+            StrValue = "this is string",
+            Sub = new SubObject
             {
-                new Paragraph
+                StrValue = "this is sub string"
+            },
+            Btn = new Button
+            {
+                Text = "this is button property",
+                Name = "btnSearch"
+            },
+            Elements = new IElement[]
+            {
+                new Button
                 {
-                    Text = "This is paragraph"
+                    Text = "This is button",
+                    Name = "btnSave"
+                },
+                
+                new Label
+                {
+                    Text = "This is label",
+                    For = "btnSave"
                 }
             }
-        });
-
-        var got = fixture.GetJsonSerializer().Serialize(d);
-
-        var s = got;
+        };
+    }
+    
+    public class TestObject
+    {
+        public string StrValue { get; set; }
+        
+        public SubObject Sub { get; set; }
+        
+        public IElement[] Elements { get; set; }
+        public IElement Btn { get; set; }
+    }
+    
+    public class SubObject
+    {
+        public string StrValue { get; set; }
     }
 }

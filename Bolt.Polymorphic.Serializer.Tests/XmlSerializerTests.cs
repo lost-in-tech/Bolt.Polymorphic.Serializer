@@ -20,18 +20,18 @@ public class XmlSerializerTests(SerializerFixture fixture) : IClassFixture<Seria
     {
         var givenInput = BuildInput();
 
-        var givenSerialized = await fixture.GetXmlSerializer().Serialize(givenInput, CancellationToken.None);
-
         var sut = fixture.GetXmlSerializer();
         
-        var got = fixture.GetXmlSerializer().Deserialize<Root>(givenSerialized);
+        var givenSerialized = await sut.Serialize(givenInput, CancellationToken.None);
+        
+        var got = sut.Deserialize<TestObject>(givenSerialized);
         
         fixture.GetJsonSerializer().Serialize(got).ShouldMatchApprovedDefault();
     }
 
-    private Root BuildInput()
+    private TestObject BuildInput()
     {
-        return new Root
+        return new TestObject
         {
             StrValue = "this is string",
             Sub = new SubObject
@@ -60,7 +60,7 @@ public class XmlSerializerTests(SerializerFixture fixture) : IClassFixture<Seria
         };
     }
     
-    public class Root
+    public class TestObject
     {
         public string StrValue { get; set; }
         
