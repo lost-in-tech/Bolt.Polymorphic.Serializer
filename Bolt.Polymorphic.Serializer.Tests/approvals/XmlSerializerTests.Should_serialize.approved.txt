@@ -1,4 +1,4 @@
-﻿<TestObject StrValue="this is string">
+﻿<TestObject StrValue="this is string" Colour="Green">
 	<Sub StrValue="this is sub string" />
 	<Elements>
 		<Button Name="btnSave" Text="This is button" />

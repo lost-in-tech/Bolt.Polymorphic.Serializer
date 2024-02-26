@@ -56,7 +56,8 @@ public class XmlSerializerTests(SerializerFixture fixture) : IClassFixture<Seria
                     Text = "This is label",
                     For = "btnSave"
                 }
-            }
+            },
+            Colour = Colour.Green
         };
     }
     
@@ -68,10 +69,18 @@ public class XmlSerializerTests(SerializerFixture fixture) : IClassFixture<Seria
         
         public IElement[] Elements { get; set; }
         public IElement Btn { get; set; }
+        public Colour Colour { get; set; }
     }
     
     public class SubObject
     {
         public string StrValue { get; set; }
+    }
+    
+    public enum Colour
+    {
+        Red,
+        Green,
+        Blue
     }
 }

@@ -19,5 +19,6 @@
     "_type": "Button",
     "name": "btnSearch",
     "text": "this is button property"
-  }
+  },
+  "colour": "green"
 }

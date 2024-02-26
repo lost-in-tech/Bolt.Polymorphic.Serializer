@@ -49,5 +49,5 @@ public record PolymorphicSerializerOptions
 
 public record JsonSerializationSettings
 {
-    public bool WriteIndented { get; set; } = false;
+    public bool WriteIndented { get; init; } = false;
 }
