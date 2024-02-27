@@ -1,0 +1,30 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [master]
+    tags: release-**
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "8.0.x"
+      - name: Install dependencies
+        run: dotnet restore ./Bolt.Polymorphic.Serializer.sln
+      - name: Build
+        run: dotnet build ./Bolt.Polymorphic.Serializer.sln --configuration Release --no-restore
+      - name: Test
+        run: dotnet test ./Bolt.Polymorphic.Serializer.sln --no-restore --verbosity normal
+      - name: Pack
+        run: dotnet pack ./Bolt.Polymorphic.Serializer/Bolt.Polymorphic.Serializer.csproj -c Release --no-build --output ../nupkgs
+      - name: Publish
+        run: dotnet nuget push ../nupkgs/**.nupkg -s https://www.nuget.org/api/v2/package/ -k ${{ secrets.nugetkey }} --skip-duplicate
