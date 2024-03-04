@@ -58,8 +58,16 @@ internal sealed class XmlDeserializerHelper
             {
                 var typeName = reader.GetAttribute("_type") ?? reader.Name;
                 var arrayElementTypeData = _typeRegistry.TryGet(typeName);
-                var obj = BuildObject(arrayElementTypeData, reader);
-                result.Add(obj);
+
+                if (typeData.CollectionType.IsSimpleType)
+                {
+                    result.Add(Convert.ChangeType(reader.ReadString(), typeData.CollectionType.Type, null));
+                }
+                else
+                {
+                    var obj = BuildObject(arrayElementTypeData, reader);
+                    result.Add(obj);
+                }
             }
         }
 
@@ -130,6 +138,7 @@ internal sealed class XmlDeserializerHelper
 
         return result;
     }
+
 
     private void SetPropertyValue(PropertyInfo prop, object? source, object? value)
     {

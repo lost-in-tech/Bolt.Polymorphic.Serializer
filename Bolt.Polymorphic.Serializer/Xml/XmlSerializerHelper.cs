@@ -66,14 +66,30 @@ internal static class XmlSerializerHelper
 
             if (propValue is null) continue;
 
+            var typeData = TypeHelper.GetTypeData(propValue.GetType());
+
+            var isSimpleCollection = typeData.CollectionType?.IsSimpleType ?? false;
+
             if (propValue is IEnumerable collection)
             {
                 writer.WriteStartElement(prop.Name);
 
-                foreach (var elm in collection)
+                if (isSimpleCollection)
                 {
-                    var itemType = elm.GetType();
-                    Serialize(itemType, itemType.Name, elm, writer);
+                    foreach (var item in collection)
+                    {
+                        writer.WriteStartElement("Value");
+                        writer.WriteString(item.ToString());
+                        writer.WriteEndElement();
+                    }
+                }
+                else
+                {
+                    foreach (var elm in collection)
+                    {
+                        var itemType = elm.GetType();
+                        Serialize(itemType, itemType.Name, elm, writer);
+                    }
                 }
 
                 writer.WriteEndElement();
@@ -88,5 +104,5 @@ internal static class XmlSerializerHelper
         writer.WriteEndElement();
     }
 
-
+    
 }

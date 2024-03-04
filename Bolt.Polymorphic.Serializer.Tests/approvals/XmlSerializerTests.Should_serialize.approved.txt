@@ -1,8 +1,21 @@
 ﻿<TestObject StrValue="this is string" Colour="Green">
-	<Sub StrValue="this is sub string" />
+	<Sub StrValue="this is sub string">
+		<ArrayOfValues>
+			<Value>Test1</Value>
+			<Value>test2</Value>
+		</ArrayOfValues>
+	</Sub>
 	<Elements>
 		<Button Name="btnSave" Text="This is button" />
 		<Label For="btnSave" Text="This is label" />
 	</Elements>
 	<Btn _type="Button" Name="btnSearch" Text="this is button property" />
+	<SectionNames>
+		<Value>section-one</Value>
+		<Value>section-two</Value>
+	</SectionNames>
+	<SectionIntValues>
+		<Value>1</Value>
+		<Value>2</Value>
+	</SectionIntValues>
 </TestObject>

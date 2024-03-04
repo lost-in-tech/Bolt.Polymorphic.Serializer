@@ -36,7 +36,8 @@ public class XmlSerializerTests(SerializerFixture fixture) : IClassFixture<Seria
             StrValue = "this is string",
             Sub = new SubObject
             {
-                StrValue = "this is sub string"
+                StrValue = "this is sub string",
+                ArrayOfValues = new []{"Test1","test2"}
             },
             Btn = new Button
             {
@@ -57,7 +58,9 @@ public class XmlSerializerTests(SerializerFixture fixture) : IClassFixture<Seria
                     For = "btnSave"
                 }
             },
-            Colour = Colour.Green
+            Colour = Colour.Green,
+            SectionNames = new []{"section-one","section-two"},
+            SectionIntValues = new []{1,2}
         };
     }
     
@@ -70,11 +73,16 @@ public class XmlSerializerTests(SerializerFixture fixture) : IClassFixture<Seria
         public IElement[] Elements { get; set; }
         public IElement Btn { get; set; }
         public Colour Colour { get; set; }
+    
+        public string[] SectionNames { get; set; }
+        public int[] SectionIntValues { get; set; }
+        public Dictionary<string,string> SampleNameValues { get; set; }
     }
     
     public class SubObject
     {
         public string StrValue { get; set; }
+        public string[] ArrayOfValues { get; set; }
     }
     
     public enum Colour

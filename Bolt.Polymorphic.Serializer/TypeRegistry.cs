@@ -56,6 +56,7 @@ public record TypeData
     public bool IsNullable { get; init; }
     public bool IsEnum { get; init; }
     public bool IsArray { get; init; }
+    public bool IsDictionary { get; init; }
     public TypeData? CollectionType { get; init; }
     public required Dictionary<string, PropertyData> Properties { get; init; }
     public PropertyData? TryGetProperty(string name) => Properties.GetValueOrDefault(name);

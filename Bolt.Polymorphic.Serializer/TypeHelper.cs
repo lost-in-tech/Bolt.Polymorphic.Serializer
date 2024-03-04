@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Collections;
+using System.Collections.Concurrent;
 
 namespace Bolt.Polymorphic.Serializer;
 internal static class TypeHelper
@@ -59,6 +60,7 @@ internal static class TypeHelper
         {
             Type = type,
             IsArray = type.IsArray,
+            IsDictionary = type.IsAssignableTo(typeof(IDictionary)),
             IsNullable = Nullable.GetUnderlyingType(type) is null ? true : false,
             IsEnum = type.IsEnum || (Nullable.GetUnderlyingType(type)?.IsEnum ?? false),
             IsSimpleType = isSimpleType,

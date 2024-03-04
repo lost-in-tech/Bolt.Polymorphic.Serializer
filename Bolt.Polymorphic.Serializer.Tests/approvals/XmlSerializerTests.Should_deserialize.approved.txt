@@ -1,7 +1,11 @@
 ﻿{
   "strValue": "this is string",
   "sub": {
-    "strValue": "this is sub string"
+    "strValue": "this is sub string",
+    "arrayOfValues": [
+      "Test1",
+      "test2"
+    ]
   },
   "elements": [
     {
@@ -20,5 +24,13 @@
     "name": "btnSearch",
     "text": "this is button property"
   },
-  "colour": "green"
+  "colour": "green",
+  "sectionNames": [
+    "section-one",
+    "section-two"
+  ],
+  "sectionIntValues": [
+    1,
+    2
+  ]
 }
