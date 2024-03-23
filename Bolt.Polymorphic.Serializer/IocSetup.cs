@@ -2,6 +2,7 @@
 using Bolt.Polymorphic.Serializer.Json;
 using Bolt.Polymorphic.Serializer.Xml;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Bolt.Polymorphic.Serializer;
 
@@ -20,13 +21,13 @@ public static class IocSetup
             typeRegistry.Register(type.Assembly, type.Types);
         }
 
-        services.AddSingleton(options.JsonSettings ?? new JsonSerializationSettings());
-        services.AddSingleton<ITypeRegistry>(_ => typeRegistry);
-        services.AddSingleton<IJsonOptionsProvider,JsonOptionsProvider>();
-        services.AddSingleton<IJsonSerializer, JsonSerializer>();
+        services.TryAddSingleton(options.JsonSettings ?? new JsonSerializationSettings());
+        services.TryAddSingleton<ITypeRegistry>(_ => typeRegistry);
+        services.TryAddSingleton<IJsonOptionsProvider,JsonOptionsProvider>();
+        services.TryAddSingleton<IJsonSerializer, JsonSerializer>();
 
-        services.AddSingleton<IXmlSerializer, XmlSerializer>();
-        services.AddSingleton<XmlDeserializerHelper>();
+        services.TryAddSingleton<IXmlSerializer, XmlSerializer>();
+        services.TryAddSingleton<XmlDeserializerHelper>();
         
         return services;
     }
