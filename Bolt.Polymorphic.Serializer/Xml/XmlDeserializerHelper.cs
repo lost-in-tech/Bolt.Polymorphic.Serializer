@@ -126,6 +126,12 @@ internal sealed class XmlDeserializerHelper
 
                         propData.PropertyInfo.SetValue(result, obj, null);
                     }
+                    else if (propData.TypeData.IsSimpleType)
+                    {
+                        var str = reader.ReadString();
+                        
+                        propData.PropertyInfo.SetValue(result, Convert.ChangeType(str, propData.TypeData.Type), null);
+                    }
                     else
                     {
                         var obj = BuildObject(propData.TypeData, reader);

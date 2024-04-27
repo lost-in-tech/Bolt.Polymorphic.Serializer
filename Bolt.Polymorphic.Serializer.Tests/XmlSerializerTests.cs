@@ -1,4 +1,5 @@
-﻿using Bolt.Polymorphic.Serializer.Tests.Fixtures;
+﻿using Bolt.Common.Extensions;
+using Bolt.Polymorphic.Serializer.Tests.Fixtures;
 using Bolt.Polymorphic.Serializer.Tests.Helpers;
 using Bolt.Polymorphic.Serializer.Xml;
 namespace Bolt.Polymorphic.Serializer.Tests;
@@ -27,6 +28,22 @@ public class XmlSerializerTests(SerializerFixture fixture) : IClassFixture<Seria
         var got = sut.Deserialize<TestObject>(givenSerialized);
         
         fixture.GetJsonSerializer().Serialize(got).ShouldMatchApprovedDefault();
+    }
+
+    [Fact]
+    public void Should_deserialized_from_simple_property_that_provided_as_child_node()
+    {
+        var sut = fixture.GetXmlSerializer();
+
+        var got = sut.Deserialize<Simple>("<Simple><Text>Hello World!</Text></Simple>");
+
+        got.ShouldNotBeNull();
+        got.Text.ShouldBe("Hello World!");
+    }
+    
+    private class Simple
+    {
+        public string Text { get; set; }
     }
 
     private TestObject BuildInput()
